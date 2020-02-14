@@ -6,10 +6,6 @@ const publicDirectory = path.join(__dirname, '../public');
 
 app.use(express.static(publicDirectory));
 
-app.get("/help", (req, res) => {
-  res.send("Hello");
-});
-
 app.listen(3000, () => {
   console.log("Server is up on port 3000");
 });
