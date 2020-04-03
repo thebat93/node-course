@@ -93,7 +93,7 @@ const upload = multer({
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      return cb(new Error('Please upload an image'));
+      return cb(new Error("Please upload an image"));
     }
 
     cb(undefined, true);
@@ -115,6 +115,21 @@ router.delete("/users/me/avatar", auth, async (req, res) => {
     res.send();
   } catch (error) {
     res.status(500).send();
+  }
+});
+
+router.get("/users/:id/avatar", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user || !user.avatar) {
+      throw new Error();
+    }
+
+    res.set("Content-Type", "image/jpg");
+    res.send(user.avatar);
+  } catch (error) {
+    res.status(404).send();
   }
 });
 
