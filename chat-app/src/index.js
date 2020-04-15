@@ -22,6 +22,11 @@ io.on("connection", (socket) => {
     io.emit("message", message);
   });
 
+  socket.on("sendLocation", ({ latitude, longitude }) => {
+    const link = `https://google.com/maps?q=${latitude},${longitude}`;
+    io.emit("message", link);
+  });
+
   socket.on("disconnect", () => {
     io.emit("message", "A user has left");
   });
