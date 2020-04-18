@@ -9,10 +9,17 @@ const messages = document.querySelector("#messages");
 
 // Templates
 const messageTemplate = document.querySelector("#message-template").innerHTML;
-const locationMessageTemplate = document.querySelector("#location-message-template").innerHTML;
+const locationMessageTemplate = document.querySelector(
+  "#location-message-template"
+).innerHTML;
 
 socket.on("message", (message) => {
-  const html = Mustache.render(messageTemplate, { message: message.text, createdAt: moment(message.createdAt).format("HH:mm") });
+  const timeFormat = { hour12: false, hour: "2-digit", minute: "2-digit" };
+  const templateData = {
+    message: message.text,
+    createdAt: new Date(message.createdAt).toLocaleTimeString([], timeFormat),
+  };
+  const html = Mustache.render(messageTemplate, templateData);
   messages.insertAdjacentHTML("beforeend", html);
 });
 
