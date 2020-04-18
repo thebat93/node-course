@@ -13,18 +13,23 @@ const locationMessageTemplate = document.querySelector(
   "#location-message-template"
 ).innerHTML;
 
-socket.on("message", (message) => {
-  const timeFormat = { hour12: false, hour: "2-digit", minute: "2-digit" };
+const timeFormat = { hour12: false, hour: "2-digit", minute: "2-digit" };
+
+socket.on("message", ({ text, createdAt }) => {
   const templateData = {
-    message: message.text,
-    createdAt: new Date(message.createdAt).toLocaleTimeString([], timeFormat),
+    message: text,
+    createdAt: new Date(createdAt).toLocaleTimeString([], timeFormat),
   };
   const html = Mustache.render(messageTemplate, templateData);
   messages.insertAdjacentHTML("beforeend", html);
 });
 
-socket.on("locationMessage", (link) => {
-  const html = Mustache.render(locationMessageTemplate, { link });
+socket.on("locationMessage", ({ url, createdAt }) => {
+  const templateData = {
+    url,
+    createdAt: new Date(createdAt).toLocaleTimeString([], timeFormat),
+  };
+  const html = Mustache.render(locationMessageTemplate, templateData);
   messages.insertAdjacentHTML("beforeend", html);
 });
 
