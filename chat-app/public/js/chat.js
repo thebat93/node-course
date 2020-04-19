@@ -13,6 +13,11 @@ const locationMessageTemplate = document.querySelector(
   "#location-message-template"
 ).innerHTML;
 
+// Options
+const options = new URLSearchParams(location.search);
+const username = options.get("username");
+const room = options.get("room");
+
 const timeFormat = { hour12: false, hour: "2-digit", minute: "2-digit" };
 
 socket.on("message", ({ text, createdAt }) => {
@@ -67,3 +72,5 @@ sendLocationButton.addEventListener("click", () => {
     });
   });
 });
+
+socket.emit("join", { username, room });
