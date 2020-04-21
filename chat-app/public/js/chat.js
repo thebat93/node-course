@@ -20,8 +20,9 @@ const room = options.get("room");
 
 const timeFormat = { hour12: false, hour: "2-digit", minute: "2-digit" };
 
-socket.on("message", ({ text, createdAt }) => {
+socket.on("message", ({ username, text, createdAt }) => {
   const templateData = {
+    username,
     message: text,
     createdAt: new Date(createdAt).toLocaleTimeString([], timeFormat),
   };
@@ -29,8 +30,9 @@ socket.on("message", ({ text, createdAt }) => {
   messages.insertAdjacentHTML("beforeend", html);
 });
 
-socket.on("locationMessage", ({ url, createdAt }) => {
+socket.on("locationMessage", ({ username, url, createdAt }) => {
   const templateData = {
+    username,
     url,
     createdAt: new Date(createdAt).toLocaleTimeString([], timeFormat),
   };
