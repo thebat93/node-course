@@ -22,6 +22,29 @@ const room = options.get("room");
 
 const timeFormat = { hour12: false, hour: "2-digit", minute: "2-digit" };
 
+const autoscroll = () => {
+  // New message element
+  const newMessage = messages.lastElementChild;
+
+  // Height of the new message
+  const newMessageStyles = getComputedStyle(newMessage);
+  const newMessageMargin = parseInt(newMessageStyles.marginBottom);
+  const newMessageHeight = newMessage.offsetHeight + newMessageMargin;
+
+  // Visible height
+  const visibleHeight = messages.offsetHeight;
+
+  // Height of messages container
+  const containerHeight = messages.scrollHeight;
+
+  // How far have I scrolled?
+  const scrollOffset = messages.scrollTop + visibleHeight;
+
+  if (containerHeight - newMessageHeight <= scrollOffset) {
+    messages.scrollTop = messages.scrollHeight;
+  }
+};
+
 socket.on("message", ({ username, text, createdAt }) => {
   const templateData = {
     username,
@@ -30,6 +53,7 @@ socket.on("message", ({ username, text, createdAt }) => {
   };
   const html = Mustache.render(messageTemplate, templateData);
   messages.insertAdjacentHTML("beforeend", html);
+  autoscroll();
 });
 
 socket.on("locationMessage", ({ username, url, createdAt }) => {
@@ -40,6 +64,7 @@ socket.on("locationMessage", ({ username, url, createdAt }) => {
   };
   const html = Mustache.render(locationMessageTemplate, templateData);
   messages.insertAdjacentHTML("beforeend", html);
+  autoscroll();
 });
 
 socket.on("roomData", ({ room, users }) => {
